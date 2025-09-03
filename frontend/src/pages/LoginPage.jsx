@@ -4,10 +4,13 @@ import { MdEmail } from "react-icons/md";
 import { TbLockPassword } from "react-icons/tb";
 import Input from "../components/Input";
 import { Link } from "react-router-dom";
+import { Loader } from "lucide-react";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  const isLoading = false;
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -39,7 +42,6 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-
           <div className="flex items-center mb-4">
             <Link to="/forgot-password" className="text-sm text-green-400 hover:underline">
               Forgot password?
@@ -50,7 +52,11 @@ const LoginPage = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
-          >Login
+            disabled={isLoading}
+          >
+          {
+            isLoading ? <Loader className=" size-6 mx-auto animate-spin" /> : "Login"
+          }
           </motion.button>
         </form>
       </div>
