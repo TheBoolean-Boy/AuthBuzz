@@ -5,6 +5,7 @@ import { FaUser } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { TbLockPassword } from "react-icons/tb";
 import { Link } from "react-router-dom";
+import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 
 
 const SignUpPage = () => {
@@ -12,7 +13,7 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
   }
   return (
@@ -31,27 +32,28 @@ const SignUpPage = () => {
         <form onSubmit={handleSubmit}>
           <Input
             icon={FaUser}
-            text="text"
+            type="text"
             placeholder="Full Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <Input
             icon={MdEmail}
-            text="email"
+            type="email"
             placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <Input
             icon={TbLockPassword}
-            text="password"
+            type="password"
             placeholder="Password"
-            value={name}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
           {/* Password strength meter */}
+          <PasswordStrengthMeter  password={password}/>
 
           <motion.button
             className='mt-5 w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200'
