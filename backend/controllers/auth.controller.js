@@ -3,7 +3,8 @@ import crypto from "crypto"
 
 import { User } from "../models/user.model.js";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
-import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } from "../mailtrap/emails.js";
+import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail, sendResetDoneEmail } from "../mailtrap/emails.js";
+import { error } from "console";
 
 
 export const signup = async(req, res)=> {
@@ -97,6 +98,9 @@ export const login = async(req, res)=> {
 
     await generateTokenAndSetCookie(res, user._id);
 
+    user.lastLogin = new Date;
+    await user.save();
+
     return res.status(200).json({
       success: true,
       message: "Logged in successfully",
@@ -105,8 +109,6 @@ export const login = async(req, res)=> {
         password: undefined
       }
     })
-
-    
   } catch (error) {
     console.log("Error in loggin in ", error);
     res.status(500).json({success: false, message: error.message})
@@ -165,16 +167,29 @@ export const resetPassword = async(req, res) => {
     const hashedPassword = await bcryptjs.hash(password, 10);
 
     user.password = hashedPassword
-    user.resetPassword = undefined
+    user.resetPasswordToken = undefined
     useReducer.resetPasswordExpiresAt =undefined
 
     await user.save();
 
     // send reset successful email
-
-    await sendResetDoneEmail()
+    await sendResetDoneEmail(email);
+    res.status(200).json({success:true, message:"Password reset successfull"})
   }
   catch{
+    console.log("Error resetting password", error);
+    res.status(500).json({message:"Couldn't reset password"})
+  }
+}
 
+export const checkAuth = async(req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+    if(!user) return res.status(400).json({success: false, message: "User not found"})
+    
+    res.status(200).json({success:true, user})
+  } catch (error) {
+    console.log("Error in checkAuth controller", error)
+    res.status(500).json({success:false, message: "Internal server error"});
   }
 }
