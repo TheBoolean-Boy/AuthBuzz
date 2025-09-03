@@ -60,8 +60,8 @@ const SignUpPage = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
-          >Sign Up
-          </motion.button>
+          > <Link to={"/verify-email"} >Sign Up</Link>
+        </motion.button>
         </form>
       </div>
       <div className='px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center'>
